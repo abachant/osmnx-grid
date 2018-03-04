@@ -7,10 +7,9 @@ import pandas as pd
 
 ox.config(log_file=True, log_console=True, use_cache=True)
 
-place = 'Mattapoisett, Massachusetts'
-gdf = ox.gdf_from_place(place)
-area = ox.project_gdf(gdf).unary_union.area
-G = ox.graph_from_place(place, network_type='bike', simplify=False)
+# get bounding box for lower Manhattan and northwestern Brooklyn
+north, south, east, west = 40.73, 40.64, -73.93, -74.04
+G = ox.graph_from_bbox(north, south, east, west, network_type='drive_service')
 
 ox.utils.add_edge_bearings(G)
 
@@ -35,7 +34,7 @@ def add_search_bearings(search_bearing, perpendicular=True):
     search_list=[]
     if type(search_bearing) == list:
         for i in search_bearing:
-            search.append(i)
+            search_list.append(i)
             if perpendicular==True:
                 for t in range(3):
                     search_list.append((i+(90*(t+1)))%360)
@@ -74,11 +73,13 @@ def add_more_edge_bearing_info(G):
         a['rounded_bearing']=int(round(a['bearing']))
         a['modulo_bearing']=a['rounded_bearing']%90
 
-search_bearings = add_search_bearings(171, perpendicular=False)
+search_bearings = add_search_bearings(172)
 add_more_edge_bearing_info(G)
-print(search_bearings)
-# ec = ox.get_edge_colors_by_attr(G, 'modulo_bearing', num_bins=5, cmap='rainbow', start=0, stop=1)
-# fig, ax = ox.plot_graph(G, node_size=0.3, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
 
-# ec = ['r' if data['rounded_bearing'] in search_bearings else 'b' for u, v, key, data in G.edges(keys=True, data=True)]
-# fig, ax = ox.plot_graph(G, node_size=0.3, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
+# plots network with a different color for each group of edges who share prependicular and parallel bearings
+ec = ox.get_edge_colors_by_attr(G, 'modulo_bearing', num_bins=19, cmap='rainbow', start=0, stop=1)
+fig, ax = ox.plot_graph(G, node_size=0.3, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
+
+# plots network with all edges of desired bearing(s) the color red('r') and all others the color blue('b')
+ec = ['r' if data['rounded_bearing'] in search_bearings else 'b' for u, v, key, data in G.edges(keys=True, data=True)]
+fig, ax = ox.plot_graph(G, node_size=0.3, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
