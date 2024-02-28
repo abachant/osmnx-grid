@@ -86,9 +86,9 @@ search_bearings = add_search_bearings(172)
 add_more_edge_bearing_info(G)
 
 # plots network with a different color for each group of edges who share prependicular and parallel bearings
-ec = ox.plot.get_edge_colors_by_attr(G, 'modulo_bearing', num_bins=19, cmap='rainbow', start=0, stop=1)
-fig, ax = ox.plot.plot_graph(G, node_size=0.3, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
+ec = ox.plot.get_edge_colors_by_attr(G, 'modulo_bearing', na_color='none', cmap='gist_rainbow')
+fig, ax = ox.plot.plot_graph(G, node_size=0, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
 
 # plots network with all edges of desired bearing(s) the color red('r') and all others the color blue('b')
 ec = ['r' if data['rounded_bearing'] in search_bearings else 'b' for u, v, key, data in G.edges(keys=True, data=True)]
-fig, ax = ox.plot.plot_graph(G, node_size=0.3, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
+fig, ax = ox.plot.plot_graph(G, node_size=0, edge_color=ec, edge_linewidth=2.5, edge_alpha=1)
