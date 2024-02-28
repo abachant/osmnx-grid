@@ -3,7 +3,6 @@ import networkx as nx
 import matplotlib.cm as cm
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
-import pandas as pd
 
 ox.settings.use_cache=True
 
