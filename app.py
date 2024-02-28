@@ -77,7 +77,6 @@ def add_more_edge_bearing_info(G):
             a['rounded_bearing']=rounded_edge_bearing
             a['modulo_bearing']=modulo_edge_bearing
         else:
-            print('no edge bearings for: ', a)
             a['rounded_bearing']=None
             a['modulo_bearing']=None
 
