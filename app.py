@@ -70,8 +70,17 @@ def add_more_edge_bearing_info(G):
     """
 
     for u,v,a in G.edges(data=True):
-        a['rounded_bearing']=int(round(a['bearing']))
-        a['modulo_bearing']=a['rounded_bearing']%90
+        if 'bearing' in a:
+            edge_bearing = a['bearing']
+            rounded_edge_bearing = int(round(edge_bearing))
+            modulo_edge_bearing = rounded_edge_bearing%90
+            a['rounded_bearing']=rounded_edge_bearing
+            a['modulo_bearing']=modulo_edge_bearing
+        else:
+            print('no edge bearings for: ', a)
+            a['rounded_bearing']=None
+            a['modulo_bearing']=None
+
 
 search_bearings = add_search_bearings(172)
 add_more_edge_bearing_info(G)
