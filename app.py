@@ -50,7 +50,7 @@ def get_perpendicular_bearings(bearing):
     return perpendicular_bearings
 
 
-def add_search_bearings(search_bearing, perpendicular=True):
+def add_search_bearings(search_bearing, include_perpendicular=True):
     """
     Take in a single bearing or list of bearings and returns it either as a list
     of itself if perpendicular is set to False or a list of itself and all its
@@ -69,22 +69,18 @@ def add_search_bearings(search_bearing, perpendicular=True):
     """
 
     search_list = []
-    if type(search_bearing) == list:
+    if isinstance(search_bearing, list):
         for i in search_bearing:
             parallel_bearings = get_parallel_bearings(i)
             search_list.extend(parallel_bearings)
-            if perpendicular == True:
+            if include_perpendicular:
                 perpendicular_bearings = get_perpendicular_bearings(i)
                 search_list.extend(perpendicular_bearings)
-            else:
-                pass
-    elif type(search_bearing) == int:
+    elif isinstance(search_bearing, int):
         search_list.extend(get_parallel_bearings(search_bearing))
-        if perpendicular == True:
+        if include_perpendicular:
             perpendicular_bearings = get_perpendicular_bearings(search_bearing)
             search_list.extend(perpendicular_bearings)
-        else:
-            pass
     else:
         print("Please make sure the bearing(s) you are searching for are either an integer or a list of integers")
     return search_list
