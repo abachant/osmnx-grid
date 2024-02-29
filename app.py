@@ -13,6 +13,43 @@ G = ox.graph_from_bbox(north, south, east, west, network_type='drive_service')
 ox.add_edge_bearings(G)
 
 
+def get_parallel_bearings(bearing):
+    """
+    Take a bearing and return its parallel counterpart.
+
+    Parameters
+    ----------
+    bearing : integer
+
+    Returns
+    -------
+    parallel_bearings : list of integers
+
+    """
+    parallel_bearings = [bearing]
+    parallel_bearings.append((bearing + 180) % 360)
+    return parallel_bearings
+
+
+def get_perpendicular_bearings(bearing):
+    """
+    Take a bearing and return its perpendicular counterparts.
+
+    Parameters
+    ----------
+    bearing : integer
+
+    Returns
+    -------
+    perpendicular_bearings : list of integers
+
+    """
+    perpendicular_bearings = []
+    perpendicular_bearings.append((bearing + 90) % 360)
+    perpendicular_bearings.append((bearing + 270) % 360)
+    return perpendicular_bearings
+
+
 def add_search_bearings(search_bearing, perpendicular=True):
     """
     Take in a single bearing or list of bearings and returns it either as a list
@@ -27,24 +64,25 @@ def add_search_bearings(search_bearing, perpendicular=True):
 
     Returns
     -------
-    search_list : list
+    search_list : list of integers
 
     """
 
     search_list = []
     if type(search_bearing) == list:
         for i in search_bearing:
-            search_list.append(i)
+            parallel_bearings = get_parallel_bearings(i)
+            search_list.extend(parallel_bearings)
             if perpendicular == True:
-                for t in range(3):
-                    search_list.append((i+(90*(t+1))) % 360)
+                perpendicular_bearings = get_perpendicular_bearings(i)
+                search_list.extend(perpendicular_bearings)
             else:
                 pass
     elif type(search_bearing) == int:
-        search_list.append(search_bearing)
+        search_list.extend(get_parallel_bearings(search_bearing))
         if perpendicular == True:
-            for t in range(3):
-                search_list.append((search_bearing+(90*(t+1))) % 360)
+            perpendicular_bearings = get_perpendicular_bearings(search_bearing)
+            search_list.extend(perpendicular_bearings)
         else:
             pass
     else:
